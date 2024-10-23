@@ -1,0 +1,284 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(FactoMineR)
+library(readxl)
+library(explor)
+
+
+file_path <- "C:/Users/alexandre/Documents/Drive/Thèse/Publications/Chomienne Sarlegna Sainton Bringoux/Review/ACP/Data_ACP.xlsx"
+
+data <- read_excel(file_path)
+data_1.8g <- read_excel("C:/Users/alexandre/Documents/Drive/Thèse/Publications/Chomienne Sarlegna Sainton Bringoux/Review/ACP/Data_ACP_2g.xlsx") 
+data_0g <- read_excel("C:/Users/alexandre/Documents/Drive/Thèse/Publications/Chomienne Sarlegna Sainton Bringoux/Review/ACP/Data_ACP_0g.xlsx") 
+data_1g <- read_excel("C:/Users/alexandre/Documents/Drive/Thèse/Publications/Chomienne Sarlegna Sainton Bringoux/Review/ACP/Data_ACP_1g.xlsx")
+```
+
+
+```{r}
+res.pca=PCA(data[,2:31],graph = FALSE)
+explor(res.pca)
+```
+
+
+```{r}
+res.pca_1.8g = PCA(data_1.8g[,2:12],graph = FALSE)
+explor(res.pca_1.8g)
+```
+
+
+```{r}
+res.pca_0g = PCA(data_0g[,2:12],graph = FALSE)
+explor(res.pca_0g)
+```
+
+
+```{r}
+res.pca_1g = PCA(data_1g[,2:12],graph = FALSE)
+explor(res.pca_1g)
+```
+
+```{r}
+# Ouvrir un dispositif graphique EPS
+postscript("mon_graphique.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Créer un graphique (par exemple, un graphique de dispersion)
+
+plot(res.pca_1g, choix="var",axes=c(1,2))
+
+# Fermer le dispositif graphique
+dev.off()
+```
+
+
+
+```{r}
+# Ouvrir un dispositif graphique EPS
+postscript("Scree_plot_0g.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Création scree plot 1g
+barplot(res.pca_0g$eig[,3])
+
+# Fermer le dispositif graphique
+dev.off()
+
+```
+
+
+
+```{r}
+library(ggplot2)
+
+x = data_1.8g[['% réussite 1.8g']]
+y = data_1.8g[['BB 1.8g']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "Error 1.8g",
+       y = "BB 1.8g")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+```
+
+
+```{r}
+
+library(ggplot2)
+
+x = data_1.8g[['Endpoint error']]
+y = data_1.8g[['RMS Biceps Bracchi']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Ouvrir un dispositif graphique EPS
+postscript("mon_graphique.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "Error 1.8g",
+       y = "BB 1.8g")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+
+# Fermer le dispositif graphique
+dev.off()
+```
+```{r}
+# Ouvrir un dispositif graphique EPS
+postscript("mon_graphique.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Créer un graphique (par exemple, un graphique de dispersion)
+plot(res.pca_1g, choix="var",axes=c(1,2))
+
+# Fermer le dispositif graphique
+dev.off()
+```
+
+
+
+```{r}
+library(ggplot2)
+
+x = data_1.8g[["Success rate"]]
+y = data_1.8g[['Relative Time to Arm Peak Velocity']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Ouvrir un dispositif graphique EPS
+postscript("mon_graphique.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "% réussite 1.8g",
+       y = "rPV 1.8g")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+
+# Fermer le dispositif graphique
+dev.off()
+```
+
+
+```{r}
+
+library(ggplot2)
+
+x = data_1.8g[['% réussite 1.8g']]
+y = data_1.8g[['Error 1.8g']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "% réussite 1.8g",
+       y = "Error 1.8g")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+```
+
+
+```{r}
+
+library(ggplot2)
+
+x = data_1g[['% réussite 1g']]
+y = data_1g[['DA 1g']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "% réussite 1g",
+       y = "DA 1g")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+```
+
+
+```{r}
+
+library(ggplot2)
+
+x = data_0g[['Success rate']]
+y = data_0g[['Ankle-hip antiphase relative time']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Ouvrir un dispositif graphique EPS
+postscript("mon_graphique.eps", width = 7, height = 5, paper = "special", horizontal = FALSE)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "Success rate",
+       y = "Ankle-hip antiphase relative time")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+
+# Fermer le dispositif graphique
+dev.off()
+```
+
+
+```{r}
+
+
+library(ggplot2)
+
+x = data_0g[['RMS Tibial Anterior']]
+y = data_0g[['Ankle-hip antiphase relative time']]
+
+# Calculer la corrélation linéaire
+correlation <- cor(x, y)
+print(correlation)
+
+# Visualiser la relation linéaire
+data <- data.frame(x, y)
+ggplot(data, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, col = "blue") +
+  labs(title = "Graphique de dispersion avec ligne de régression",
+       x = "RMS TA",
+       y = "Antiphase")
+
+# Analyse de régression linéaire
+model <- lm(y ~ x)
+summary(model)
+```
+
+
+```{r}
